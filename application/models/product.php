@@ -181,9 +181,8 @@ class Product extends MY_Model{
     
         $this->db->select("*");
         $this->db->from("product");
-        $this->db->where("product_status","1");
         $this->db->where("is_deleted","0");
-
+        
         $query = $this->db->get();
 
         $result = $query->result_array();

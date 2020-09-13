@@ -37,12 +37,13 @@ class Product_con extends CI_Controller
 
       $data['title'] = 'Product List';
 
-      $data['product'] = $this->product->fetch_Product_Model();
-      $data['expiryproduct'] = $this->notification->getExpiryProduct();
-      $data['oftproduct'] = $this->notification->getOftProduct();
-      $data['duedate'] = $this->notification->getDueDate();
-      $data['totalnoti'] = $this->notification->getTotalNoti();
-
+        $data['product'] = $this->product->fetch_Product_Model();
+        $data['expiryproduct'] = $this->notification->getExpiryProduct();
+        $data['oftproduct'] = $this->notification->getOftProduct();
+        $data['duedate'] = $this->notification->getDueDate();
+        $data['exnoti'] = $this->notification->getExNoti();
+        $data['ofsnoti'] = $this->notification->getOfsNoti();
+        $data['ornoti']  = $this->notification->getOrdernoti();
 
       $path = 'product/list';
 
@@ -85,10 +86,10 @@ class Product_con extends CI_Controller
 
       array('field' => 'brand_id' , 'label' => 'Brand Id' , 'rules' => 'trim'),
       array('field' => 'product_name' , 'label' => 'Product Name' , 'rules' => 'trim'),
-    array('field' => 'product_quantity' , 'label' => 'Product Quantity' , 'rules' => 'required'),
-    array('field' => 'product_unit' , 'label' => 'Product Unit' , 'rules' => 'required'),
-    array('field' => 'product_base_price' ,'label' => 'Product Base Price' , 'rules' => 'required'),
-    array('field' => 'product_selling_price' , 'label' => 'Product Selling Price' , 'rules' => 'required' ),
+      array('field' => 'product_quantity' , 'label' => 'Product Quantity' , 'rules' => 'required'),
+      array('field' => 'product_unit' , 'label' => 'Product Unit' , 'rules' => 'required'),
+      array('field' => 'product_base_price' ,'label' => 'Product Base Price' , 'rules' => 'required'),
+      array('field' => 'product_selling_price' , 'label' => 'Product Selling Price' , 'rules' => 'required' ),
     ));
 
       if($this->form_validation->run() == TRUE )
@@ -112,27 +113,28 @@ class Product_con extends CI_Controller
 
       }
 
-    $data['title']  = 'Product';
-    $data['category_list'] = $this->_fill_category_list();
-    $data['unit_list']     = $this->_fill_product_unit();
-    $data['expiryproduct'] = $this->notification->getExpiryProduct();
-    $data['oftproduct'] = $this->notification->getOftProduct();
-    $data['duedate'] = $this->notification->getDueDate();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
+        $data['title']  = 'Product';
+        $data['category_list'] = $this->_fill_category_list();
+        $data['unit_list']     = $this->_fill_product_unit();
+        $data['expiryproduct'] = $this->notification->getExpiryProduct();
+        $data['oftproduct'] = $this->notification->getOftProduct();
+        $data['duedate'] = $this->notification->getDueDate();
+        $data['exnoti'] = $this->notification->getExNoti();
+        $data['ofsnoti'] = $this->notification->getOfsNoti();
+        $data['ornoti']  = $this->notification->getOrdernoti();
 
-
-    $path='product/add';
-    if(isset($_GET['ajax'])&&$_GET['ajax']==true)
-    {
-        $this->load->view($path, $data);
-    }
-    else
-    {
-        $data['contents']=array($path);
-        $this->load->view('header',$data);
-        $this->load->view('index',$data);
-        $this->load->view('footer',$data);
-    }
+        $path='product/add';
+        if(isset($_GET['ajax'])&&$_GET['ajax']==true)
+        {
+            $this->load->view($path, $data);
+        }
+        else
+        {
+            $data['contents']=array($path);
+            $this->load->view('header',$data);
+            $this->load->view('index',$data);
+            $this->load->view('footer',$data);
+        }
   }
 
    /**
@@ -169,15 +171,15 @@ class Product_con extends CI_Controller
 
       array('field' => 'brand_id' , 'label' => 'Brand Id' , 'rules' => 'trim'),
       array('field' => 'product_name' , 'label' => 'Product Name' , 'rules' => 'trim'),
-    array('field' => 'product_quantity' , 'label' => 'Product Quantity' , 'rules' => 'required'),
-    array('field' => 'product_unit' , 'label' => 'Product Unit' , 'rules' => 'required'),
-    array('field' => 'product_base_price' ,'label' => 'Product Base Price' , 'rules' => 'required'),
-    array('field' => 'product_selling_price' , 'label' => 'Product Selling Price' , 'rules' => 'required' ),
+      array('field' => 'product_quantity' , 'label' => 'Product Quantity' , 'rules' => 'required'),
+      array('field' => 'product_unit' , 'label' => 'Product Unit' , 'rules' => 'required'),
+      array('field' => 'product_base_price' ,'label' => 'Product Base Price' , 'rules' => 'required'),
+      array('field' => 'product_selling_price' , 'label' => 'Product Selling Price' , 'rules' => 'required' ),
     ));
 
      if($this->form_validation->run() == TRUE)
      {
-         unset($_POST['submit']);
+        unset($_POST['submit']);
         $product = $this->input->post(); 
         $this->load->model('product');
         foreach($product as $key => $value)
@@ -200,40 +202,71 @@ class Product_con extends CI_Controller
 
         unset($_POST);
 
-       $data['script'] = '<script>alert("'.html_escape($this->product->product_name). 'has been edited successfuly.");</script>';
+        $data['script'] = '<script>alert("'.html_escape($this->product->product_name). 'has been edited successfuly.");</script>';
 
-            redirect('product_con/fetch_Product');
+        redirect('product_con/fetch_Product');
 
-     }else{
+         }else{
 
-      $data['error'] = validation_errors();
-     }
+          $data['error'] = validation_errors();
+         }
 
+
+    }
+
+        $data['title'] = "Edit Product";
+        $data['product'] = $this->product;
+        $data['expiryproduct'] = $this->notification->getExpiryProduct();
+        $data['oftproduct'] = $this->notification->getOftProduct();
+        $data['duedate'] = $this->notification->getDueDate();
+        $data['exnoti'] = $this->notification->getExNoti();
+        $data['ofsnoti'] = $this->notification->getOfsNoti();
+        $data['ornoti']  = $this->notification->getOrdernoti();
+
+        $path = "product/edit";
+
+         if(isset($_GET['ajax'])&&$_GET['ajax']==true)
+        { 
+
+            $this->load->view($path, $data);
+
+        }else{
+
+            $data['contents']=array($path);
+            $this->load->view('header',$data);
+            $this->load->view('index',$data);
+            $this->load->view('footer',$data);
+
+        }
+
+  }
+  
+  public function cronUpdate()
+  {
+
+    $this->load->model('product');
+    $this->load->model('monreports');
+
+    $product = $this->product->fetch_Product_Model();
+
+    foreach ($product as $pro) {
+       
+        $this->product->updateDate($pro['product_id']);
+
+        $date = date('Y/m',strtotime($this->monreports->getTime($pro['product_id'])));
+
+        if(date('Y/m') > $date){
+
+          $added_quantity = 0;
+
+          $this->monreports->addMonreportsOrder($pro['product_id'],$added_quantity);
+        }else{
+
+           redirect("/");
+        }
 
     }
 
-    $data['title'] = "Edit Product";
-    $data['product'] = $this->product;
-    $data['expiryproduct'] = $this->notification->getExpiryProduct();
-    $data['oftproduct'] = $this->notification->getOftProduct();
-    $data['duedate'] = $this->notification->getDueDate();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
-
-    $path = "product/edit";
-
-     if(isset($_GET['ajax'])&&$_GET['ajax']==true)
-    { 
-
-        $this->load->view($path, $data);
-
-    }else{
-
-        $data['contents']=array($path);
-        $this->load->view('header',$data);
-        $this->load->view('index',$data);
-        $this->load->view('footer',$data);
-
-    }
 
   }
 
@@ -246,7 +279,7 @@ class Product_con extends CI_Controller
     }
 
       $this->load->model('product');
-    $this->product->load($product_id);
+      $this->product->load($product_id);
 
     if($this->input->post()){
 
@@ -255,19 +288,31 @@ class Product_con extends CI_Controller
         array( 'field' => 'del', 'label' => '', 'rules' => 'required|trim|has_no_schar', ),
       ));
 
-    if($this->form_validation->run() == TRUE && $this->input->post('product_id') == $product_id)
-   {
-        $this->product->deleteProduct($product_id);
+      if($this->form_validation->run() == TRUE && $this->input->post('product_id') == $product_id)
+     {
+         $this->load->model('orderitems');
+          $this->orderitems->get_by_fkey('product_id',$product_id);
 
-          echo 'ok';
-          return;
+          if(!$this->orderitems->product_id){
 
-        }else{
+          $this->product->deleteProduct($product_id);
 
-          echo 'nok';
-          return;
+            echo 'ok';
+            return;
 
-        }
+          }else{
+
+            echo 'nok';
+            return;
+
+          }
+
+      }else{
+
+        $data['error'] = 'mismatch';
+        return;
+
+      }
 
   }
 

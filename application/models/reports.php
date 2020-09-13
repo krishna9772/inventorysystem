@@ -60,4 +60,5 @@ class Reports extends CI_Model
 			
 		}
 	}
+
 }

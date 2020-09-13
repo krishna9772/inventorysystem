@@ -1,20 +1,10 @@
   <!DOCTYPE html>
   <html>
-  <head>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Monthly Reports</title>
 
-     <?php if($this->session->flashdata('success')): ?>
-          <div class="alert alert-success alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <?php echo $this->session->flashdata('success'); ?>
-          </div>
-      <?php endif; ?>
-
-     <meta charset="utf-8">
+     
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-      <title><?php echo @$title ?></title>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" />
      <link rel="stylesheet" href='<?php echo base_url() ?>assets/css/ui/jquery-ui.css' media="screen"/>
       <link rel="stylesheet" href='<?php echo base_url() ?>assets/css/print.css' media="print"/>
@@ -66,33 +56,39 @@
   <body>
   <div class="container">
   <section>
-  <div class="row invoice-info">
-   	 	 <div class="col-sm-4 invoice-col">
-   	 	  <table>
-   	 	  	 <tr>
-   	 	  	 <th class="first-col">Customer </th>
-   	 	  	 <td>Ma Tue Tue</td>
-   	 	  	 </tr>
-   	 	  	 <tr>
-   	 	  	 <th class="first-col">Location</th>
+  <div class="row">
+       <div class="col-xs-4">
+        <table>
+           <tr>
+           <th class="first-col">Customer </th>
+           <td>Matutu(1)</td>
+           </tr>
+           <tr>
+           <th class="first-col">Location</th>
                <td>Mogok</td>
-   	 	  	 </tr>
-   	 	  </table>
-   	 	 </div>
-   	 	  <table class="pull-right">
-   	 	  	 <tr>
-   	 	  	 <th class="second-col">Principle</th>
-   	 	  	 <td><?php echo form_dropdown('category_id',$category_list,$this->input->post('category_id'),   "class='form-control category_id' title='Principle Company' required");?></td>
-   	 	  	 </tr>
-   	 	  	 <tr>  
-   	 	  	 <th class="second-col">Month</th>
-               <td><span id="date"><?php echo $this->uri->segment('3');?></span></td>
-   	 	  	 </tr>
-   	 	  </table> 
-   	 	 </div><br><br>
-      
-       <div class="row" id="reports">
+           </tr>
+        </table>
+       </div>
+       <div class="col-xs-3">
+            <div class='ajax-loader' style='visibility:hidden'>
 
+            <img src='<?php echo base_url()?>assets/img/loading.svg'>
+
+         </div>
+       </div>
+        <table class="">
+           <tr>
+           <th class="second-col">Principle</th>
+           <td><?php echo form_dropdown('category_id',$category_list,$this->input->post('category_id'),   "class='form-control category_id' title='Principle Company' required");?></td>
+           </tr>
+           <tr>  
+           <th class="second-col">Month</th>
+               <td><span id="date"><?php echo $this->uri->segment('3');?></span></td>
+           </tr>
+        </table> 
+       </div>
+       <div class="row" id="reports">
+          
        </div>
       </section>
    </div>
@@ -107,16 +103,20 @@
           var date = $("#date").text();
           var category_id = $(".category_id").val();
 
-          var url = "<?php echo base_url();?>monreports_con/getSoldProduct/"+category_id+"/"+date;
+          var url = "<?php echo base_url();?>index.php/monreports_con/getSoldProduct/"+category_id+"/"+date;
 
           $.ajax({
-                
+             method : 'post',
+                beforeSend:function(){
+                 $('.ajax-loader').css("visibility", "visible");
+                },
                 url : url,
-                method : 'post',
                 data   : {category_id:category_id,date:date,csrf_test_name: $.cookie('csrf_cookie_name')},
                  success:function(data){
 
                   $("#reports").html(data);
+                 $('.ajax-loader').css("visibility", "hidden");
+
 
                  },
                   error:function(){

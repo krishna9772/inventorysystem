@@ -1,5 +1,4 @@
 <div class="row">
-   
     <div class="col-md-12 col-xs-12">
    <?php if($this->session->flashdata('success')): ?>
           <div class="alert alert-success alert-dismissible" role="alert">
@@ -34,11 +33,11 @@
 			  </div>
 	          <div class="col-md-4">
 				  <label>Date</label>
-				  <input type="text" name="created_date" id="created_date" class="form-control" placeholder="mm/dd/YY" autocomplete="off" required />
+				  <input type="date" name="created_date" id="created_date" class="form-control" placeholder="mm/dd/YY" autocomplete="off" required />
 			  </div>
 			  <div class="col-md-4">
 				  <label>Net Due Date</label>
-				  <input type="text"  name="net_due_date" id="net_date" class="form-control" placeholder="mm/dd/YY" autocomplete="off" required />
+				  <input type="date" min=<?php echo date('Y-m-d');?>  name="net_due_date" id="net_date" class="form-control" placeholder="mm/dd/YY" autocomplete="off" required />
 			  </div>
 		  </div>
 
@@ -52,8 +51,9 @@
 							  <table class="table table-bordered" id="product_info_table">
                   <thead>
                     <tr>
-                      <th style="width:25%">Product</th>
-                      <th style="width:10%">Remain Qty</th>
+                      <th>#</th>
+                      <th style="width:40%">Product</th>
+                      <th style="width:10%">A.Qty</th>
                       <th style="width:10%">Qty</th>
                       <th style="width:15%">Rate</th>
                       <th style="width:10%">Discount</th>
@@ -65,19 +65,21 @@
 
                    <tbody>
                      <tr id="row_1">
+                      <td>1</td>
                        <td>
-                        <select class="form-control  product" data-row-id="row_1" id="product_1" name="product[]" style="width:100%;" onchange="getProductData(1)" required>
+                        <select class="product" data-row-id="row_1" id="product_1" name="product[]" style="width:200px;"onchange="getProductData(1)" required>
                             <option value=""></option>
                             <?php foreach ($product_list as $k => $v): ?>
                               <option value="<?php echo $v['product_id'] ?>"><?php echo $v['product_name'] ?></option>
                             <?php endforeach ?>
                           </select>
+                        <span id="product_status1" class="label label-danger"></span> 
                         </td>
-                       <td><input type="text" name="remain_qty[]" id="remain_qty1" readonly class="form-control"></td>
+                       <td><input type="text" name="remain_qty[]" id="remain_qty1" readonly class="form-control" style="width: 50px;"></td>
                         <td>
-                        	<input type="text" name="qty[]" id="qty_1" class="form-control" required onkeyup="getTotal(1)"></td>
+                        	<input type="text" name="qty[]" id="qty_1" class="form-control" required onkeyup="getTotal(1)"   style="width: 50px;"></td>
                         <td>
-                          <input type="text" name="rate[]" id="rate_1" class="form-control" disabled autocomplete="off">
+                          <input type="text" name="rate[]" id="rate_1" class="form-control" disabled autocomplete="off" style="width: 70px;">
                           <input type="hidden" name="rate_value[]" id="rate_value_1" class="form-control" autocomplete="off">
                         </td>
                          <input type="hidden" name="tax[]" id="tax_1" class="form-control" required readonly>
@@ -85,16 +87,14 @@
                           <input type="discount" name="discount[]" id="discount_1" class="form-control" onkeyup="getTotal(1)">  
                         </td>
                         <td>
-                          <input type="text" name="amount[]" id="amount_1" class="form-control" disabled autocomplete="off">
+                          <input type="text" name="amount[]" id="amount_1" class="form-control" disabled autocomplete="off" style="width: 90px;">
                           <input type="hidden" name="amount_value[]" id="amount_value_1" class="form-control" autocomplete="off">
                         </td>
 
                         <td>
-                        <input type="text" name="foc[]" id="foc_1" class="form-control">
+                        <input type="text" name="foc[]" id="foc_1" class="form-control" style="width: 50px;">
                         </td>
 
-                       
-                    
                         <td><button type="button" class="btn btn-default" onclick="removeRow('1')"><i class="glyphicon glyphicon-remove"></i></button></td>
                      </tr>
                    </tbody>
@@ -163,8 +163,13 @@
   	  $("#add_row").unbind('click').bind('click', function() {
       var table = $("#product_info_table");
       var count_table_tbody_tr = $("#product_info_table tbody tr").length;
-      var row_id = count_table_tbody_tr + 1;
+      if(count_table_tbody_tr > 7){
 
+          alert('Maximum rows 8');
+
+      }else{
+
+      var row_id = count_table_tbody_tr + 1;
       $.ajax({
           url:  base_url + 'order_con/getTableProductRow/',
           data:{csrf_test_name: $.cookie('csrf_cookie_name')},
@@ -174,21 +179,23 @@
             
               // console.log(reponse.x);
                var html = '<tr id="row_'+row_id+'">'+
+                   '<td>'+row_id+'</td>'+
                    '<td>'+ 
-                    '<select class="form-control  product" data-row-id="'+row_id+'" id="product_'+row_id+'" name="product[]" style="width:100%;" onchange="getProductData('+row_id+')">'+
+                    '<select class="product" data-row-id="'+row_id+'" id="product_'+row_id+'" name="product[]" style="width:200px;" onchange="getProductData('+row_id+')">'+
                         '<option value=""></option>';
                         $.each(response, function(index, value) {
                           html += '<option value="'+value.product_id+'">'+value.product_name+'</option>';             
                         });
                         
                       html += '</select>'+
+                      '<span id="product_status'+row_id+'" class="label label-danger"></span>'+ 
                     '</td>'+ 
-                   '<td><input type="text" name="remain_qty[]" id="remain_qty'+row_id+'" class="form-control" required readonly></td>'+
-                    '<td><input type="text" name="qty[]" id="qty_'+row_id+'" class="form-control" onkeyup="getTotal('+row_id+')"></td>'+
-                    '<td><input type="text" name="rate[]" id="rate_'+row_id+'" class="form-control" disabled><input type="hidden" name="rate_value[]" id="rate_value_'+row_id+'" class="form-control"></td>'+
+                   '<td><input type="text" name="remain_qty[]" id="remain_qty'+row_id+'" class="form-control" style="width: 50px;" required readonly></td>'+
+                    '<td><input type="text" name="qty[]" id="qty_'+row_id+'" class="form-control" style="width: 50px;" onkeyup="getTotal('+row_id+')"></td>'+
+                    '<td><input type="text" name="rate[]" id="rate_'+row_id+'" class="form-control" style="width:70px;" disabled><input type="hidden" name="rate_value[]"  id="rate_value_'+row_id+'" class="form-control"></td>'+
                     '<input type="hidden" name="tax[]" id="tax_'+row_id+'" class="form-control" required readonly>'+ 
                     '<td><input type="text" name="discount[]" id="discount_'+row_id+'" class="form-control" onkeyup="getTotal('+row_id+')"></td>'+
-                    '<td><input type="text" name="amount[]" id="amount_'+row_id+'" class="form-control" disabled><input type="hidden" name="amount_value[]" id="amount_value_'+row_id+'" class="form-control"></td>'+
+                    '<td><input type="text" name="amount[]" id="amount_'+row_id+'" class="form-control" style="width:90px;" disabled><input type="hidden" name="amount_value[]"  id="amount_value_'+row_id+'" class="form-control"></td>'+
                  ' <td><input type="text" name="foc[]" id="foc_'+row_id+'" class="form-control"></td>'+
                     '<td><button type="button" class="btn btn-default" onclick="removeRow(\''+row_id+'\')"><i class="glyphicon glyphicon-remove"></i></button></td>'+
                     '</tr>';
@@ -204,8 +211,10 @@
 
           }
         });
-
       return false;
+
+    }
+
     });
 
   });
@@ -236,14 +245,19 @@
           $("#tax_"+row_id).val(response.product_tax);
           $("#rate_"+row_id).val(response.product_selling_price);
           $("#rate_value_"+row_id).val(response.product_selling_price);
+          
+          if(response.product_status == 0) {
+            $("#product_status"+row_id).text("inactive");
+          }
 
-          $("#qty_"+row_id).val(1);
+
+          $("#qty_"+row_id).val("");
           $("#qty_value_"+row_id).val(1);
           $("#discount_"+row_id).val("0.00");
           $("#foc_"+row_id).val("0");
 
           var tax = (Number(response.product_selling_price) /100) * $("#tax_"+row_id).val();
-          var total = Number(response.product_selling_price) * 1;
+          var total = Number(response.product_selling_price) * 0;
           total = total+tax;
           total = total.toFixed(2);
           $("#amount_"+row_id).val(total);
@@ -301,7 +315,19 @@
   }
 
    function getTotal(row = null) {
-    if(row) {
+
+    var qty = Number($("#qty_"+row).val());
+    var avaiqty = Number($("#remain_qty"+row).val());
+
+    // alert(avaiqty);
+
+    if(qty > avaiqty) {
+          
+          alert("Not available that amount");
+          
+        
+    }else{
+
       var tax = (Number($("#rate_value_"+row).val()) * Number($("#qty_"+row).val())/100) * $("#tax_"+row).val();
       var total = Number($("#rate_value_"+row).val()) * Number($("#qty_"+row).val());
       var discount =   (Number($("#rate_value_"+row).val()) * Number($("#qty_"+row).val())/100) * $("#discount_"+row).val();
@@ -312,10 +338,9 @@
       
       subAmount();
 
-    } else {
-      alert('no row !! please refresh the page');
     }
-  }
+
+}
 
 
   </script>

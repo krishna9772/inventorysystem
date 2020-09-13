@@ -20,7 +20,7 @@ class Home extends CI_Controller {
 
 	public function index(){
 
-		$data['title'] = 'Inventory_demo';
+		$data['title'] = 'Matutu - Inventory';
 
 		$data['contents'] = array('content/card');
 
@@ -32,9 +32,11 @@ class Home extends CI_Controller {
 	    $data['total_paid_value'] = $this->home_con->count_total_paid_value();
 	    $data['total_unpaid_value'] = $this->home_con->count_total_unpaid_value();
 	    $data['expiryproduct'] = $this->notification->getExpiryProduct();
-	    $data['oftproduct'] = $this->notification->getOftProduct();
-	    $data['duedate'] = $this->notification->getDueDate();
-	    $data['totalnoti'] = $this->notification->getTotalNoti();
+        $data['oftproduct'] = $this->notification->getOftProduct();
+        $data['duedate'] = $this->notification->getDueDate();
+        $data['exnoti'] = $this->notification->getExNoti();
+        $data['ofsnoti'] = $this->notification->getOfsNoti();
+        $data['ornoti']  = $this->notification->getOrdernoti();
 
 
 		$this->load->view("header",$data);

@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 class Monreports extends CI_Model
 {
@@ -9,20 +9,32 @@ class Monreports extends CI_Model
   	  parent::__construct();
   }
 
-  public function getSoldProduct($category_id=0,$date=0)
+  public function getSoldProduct($category_id,$date=0)
   {
-      
        // $sql = "SELECT foc,product_name,product_remain_quantity,SUM(qty) as total_qty FROM orders_item  JOIN product on orders_item.product_id = product.product_id
        //         JOIN brand on product.category_id = brand.category_id  WHERE created_date BETWEEN '$inc_date' and '$date' and   product.category_id = 2 group by qty ";
 
-     $sql = "SELECT * FROM monreports JOIN product on monreports.product_id = product.product_id where monreports.category_id = '$category_id' and updated_date LIKE'%".$date."%' ";
+     $sql = "SELECT * FROM monreports JOIN product on monreports.product_id = product.product_id where monreports.category_id  = '$category_id' and product.is_deleted = '0' and product.product_status = '1' and  updated_date LIKE'%".$date."%' order by monreports.category_id ";
 
        // $sql = "SELECT * FROM brand JOIN product on brand.category_id = product.product_id JOIN orders_item on product.product_id = orders_item.product_id WHERE created_date BETWEEN '$inc_date' and '$date' and product.category_id = 1";
       
        $query = $this->db->query($sql);
        	
        return $query->result_array();
+  }
 
+   public function getMultiReports($category_ids,$date=0)
+  {
+    
+     $value = implode(',', $category_ids);
+
+     $sql = "SELECT * FROM monreports JOIN product on monreports.product_id = product.product_id where monreports.category_id IN ($value) and product.is_deleted = '0' and product.product_status = '1' and  updated_date LIKE'%".$date."%' order by monreports.category_id ";
+
+       // $sql = "SELECT * FROM brand JOIN product on brand.category_id = product.product_id JOIN orders_item on product.product_id = orders_item.product_id WHERE created_date BETWEEN '$inc_date' and '$date' and product.category_id = 1";
+      
+       $query = $this->db->query($sql);
+        
+       return $query->result_array();
   }
 
   public function getTime($id)   // Getting the lasted updated time from monreports
@@ -85,7 +97,17 @@ class Monreports extends CI_Model
 
 
   }
-  
+
 }
 
+  public function categoryName($category_id){
+
+    $query =  "SELECT category_name from category where category_id = '$category_id'";
+
+    $value = $this->db->query($query);
+
+    return $value->row()->category_name;
+
+  }
+  
 }

@@ -7,14 +7,8 @@
           </div>
       <?php endif; ?>
 
-<?php
 
-if($order)
-{
-
-   $i=0;
-
-echo  "<div class='table-responsive'><table id='order_data' class='table table-bordered table-striped' ><thead><tr>
+       <div class='table-responsive'><table id='order_data' class='table table-bordered table-striped' ><thead><tr>
            <th>Bill No</th>
            <th>Name</th>
            <th>Address</th>
@@ -23,60 +17,36 @@ echo  "<div class='table-responsive'><table id='order_data' class='table table-b
            <th>Amount</th>
            <th>Status</th>
            <th class='hidden_print'>Actions</th>
-       </tr></thead><tbody>";
+       </tr></thead><tbody></table></div>
 
-    
-
-       foreach($order as $row)
-       {
-
-        $actions = '';
-        if($this->bitauth->is_admin())
-        {
-
-           $actions .= anchor('order_con/update_Order/'.$row['id'], '<span class="glyphicon glyphicon-edit"></span>',array('title'=>'Edit order'));
-          $actions .= anchor('order_con/delete_Order/'.$row['id'], '<span class="glyphicon glyphicon-remove" class="delete"></span>',array('title'=>'Delete order'));
-          $actions .= anchor('order_con/print_Order/'.$row['id'], '<span class="glyphicon glyphicon-print" class="print"><span>',array('title'=>'Print order'));
-          $actions .= anchor('order_con/email_Order/'.$row['id'], '<span class="glyphicon glyphicon-paperclip" class="print"><span>',array('title'=>'Email order'));
-      
-        }
-
-        if($row['paid_status'] == 1) {
-        $paid_status = '<span class="label label-success">Paid</span>'; 
-      }
-      else {
-        $paid_status = '<span class="label label-warning">Not Paid</span>';
-      }
-
-
-     echo '<tr id="order'.$row['id'].'" title="'.$row['customer_name'].'">'.
+        <!-- '<tr id="order" title="'.$row['customer_name'].'">'.
           '<td>'.html_escape($row['bill_no']).'</td>'.
           '<td>'.html_escape($row['customer_name']).'</td>'.
           '<td>'.html_escape($row['customer_address']).'</td>'.
-          '<td>'.html_escape(date('d-m-Y', $row['date_time'])).'</td>'.
-          '<td>'.html_escape(date('d-m-Y', $row['net_due_date'])).'</td>'.
-          '<td>'.html_escape($row['net_amount']).'</td>'.
-          '<td>'.$paid_status.'</td>'.
+          '<td>'.html_escape(date('Y-m-d', $row['date_time'])).'</td>'.
+          '<td>'.html_escape(date('Y-m-d', $row['net_due_date'])).'</td>'.
+          '<td>'.number_format($row['net_amount'],2).'</td>'.
+          '<td id="order_id" data-number="'.$row['id'].'" data-status="'.$row['paid_status'].'">'.$paid_status.'</td>'.
           '<td class="hidden-print">'.$actions.'</td>'.
-        '</tr>';
+        '</tr>'; -->
 
-   
-}
-  $i++;
 
-     echo '</tbody></table></div>';
-
-?>
 
 <?php
-}
+
 echo '<a class="btn btn-info"'.anchor('order_con/add_Order', 'Add Order',array('class'=>'hidden-print')).'</a>';
 ?>
 <script type="text/javascript">
 
   $(document).ready(function(){ 
 
-        $("#order_data").dataTable();
+        var table = $('#order_data').DataTable({
+          'processing': true,
+          'ajax': '<?php echo base_url()?>index.php/order_con/fetch_Data',
+          'order': []
+
+        });
+
 
         $("#order_data").on('click', "a" ,function(e){
             if($(this).closest('a').attr('title') == 'Delete order'){
@@ -86,6 +56,24 @@ echo '<a class="btn btn-info"'.anchor('order_con/add_Order', 'Add Order',array('
                });  
             }
         });
+
+        $("[id^=order]").on('click', '#order_id',function(e){
+            var order = $(this);
+            var order_id = order.data('number');
+            var status   = order.data('status') ^ 1;
+            var base_url = "<?php echo base_url() ?>index.php/order_con/change_order_status";
+
+            $.ajax({
+                   url: base_url,
+                   method: 'post',
+                   data: {order_id:order_id,status:status,csrf_test_name: $.cookie('csrf_cookie_name')},
+                   dataType: 'json',
+                   success: function(response) {
+                            $("#order_data").DataTable().ajax.reload(null, false);                       
+                   }
+                  
+            })
+        })
 
          $("#order_data").on('click', "a" ,function(e){
             if($(this).closest('a').attr('title') == 'Email order'){

@@ -1,7 +1,7 @@
 <?php if ( !defined('BASEPATH')) exit('No direct script access allowed');
 
-  class Account extends CI_Controller
-  {
+class Account extends CI_Controller
+{
     /**
      * Account::__construct()
      *
@@ -11,6 +11,13 @@
       parent::__construct();
 
       $this->load->model('notification');
+
+      $data['expiryproduct'] = $this->notification->getExpiryProduct();
+      $data['oftproduct'] = $this->notification->getOftProduct();
+      $data['duedate'] = $this->notification->getDueDate();
+      $data['exnoti'] = $this->notification->getExNoti();
+      $data['ofsnoti'] = $this->notification->getOfsNoti();
+      $data['ornoti']  = $this->notification->getOrdernoti();
 
       $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
     }
@@ -46,19 +53,21 @@
       $data['expiryproduct'] = $this->notification->getExpiryProduct();
       $data['oftproduct'] = $this->notification->getOftProduct();
       $data['duedate'] = $this->notification->getDueDate();
-      $data['totalnoti'] = $this->notification->getTotalNoti();
+      $data['exnoti'] = $this->notification->getExNoti();
+      $data['ofsnoti'] = $this->notification->getOfsNoti();
+      $data['ornoti']  = $this->notification->getOrdernoti();
 
 
       
       $path='account/users';
       if(isset($_GET['ajax'])&&$_GET['ajax']==true)
       {
-          $this->load->view($path, $data);
+        $this->load->view($path, $data);
       }else{
-          $data['contents']=array($path);
-          $this->load->view('header', $data);
-          $this->load->view('index', $data);
-          $this->load->view('footer', $data);
+        $data['contents']=array($path);
+        $this->load->view('header', $data);
+        $this->load->view('index', $data);
+        $this->load->view('footer', $data);
       }
 
     }
@@ -107,19 +116,25 @@
           $data['error'] = validation_errors();
         }
       } 
+      $data['expiryproduct'] = $this->notification->getExpiryProduct();
+      $data['oftproduct'] = $this->notification->getOftProduct();
+      $data['duedate'] = $this->notification->getDueDate();
+      $data['exnoti'] = $this->notification->getExNoti();
+      $data['ofsnoti'] = $this->notification->getOfsNoti();
+      $data['ornoti']  = $this->notification->getOrdernoti();
       $data['title']='Login';
       $path='account/login';
       if(isset($_GET['ajax'])&&$_GET['ajax']==true)
       {
-          $this->load->view($path, $data);
+        $this->load->view($path, $data);
       }else{
-          $data['includes']=array($path); 
+        $data['includes']=array($path); 
           $this->load->view('header', $data);
           $this->load->view('index', $data); // account/login
           $this->load->view('footer', $data);
-      }
+        }
 
-    }
+      }
 
     /**
      * account::signup()
@@ -146,7 +161,7 @@
       {
         $this->form_validation->set_rules(array(
           array( 'field' => 'username', 'label' => 'User Name', 'rules' => 'required|trim|bitauth_unique_username|has_no_schar', ),
-        array( 'field' => 'first_name', 'label' => 'First Name', 'rules' => 'trim|has_no_schar', ),
+          array( 'field' => 'first_name', 'label' => 'First Name', 'rules' => 'trim|has_no_schar', ),
           array( 'field' => 'gender', 'label' => 'Gender', 'rules' => 'required', ),
           array( 'field' => 'email', 'label' => 'Email', 'rules' => 'required|trim|valid_email', ),
           array( 'field' => 'phone', 'label' => 'Phone', 'rules' => 'required|trim', ),
@@ -180,14 +195,14 @@
           if($this->bitauth->add_user($user))
           {
             foreach ($_POST as $key => $value)
-                unset($_POST[$key]);
+              unset($_POST[$key]);
             
             $data['script'] = '<script>alert("'. html_escape($user['username']). ' has been registered successfuly.");</script>';
           }
           else
             $data['error'] = '<div class="alert alert-danger">Registring user: '. html_escape($user['username']). ' is failed.</div>';
         }else{
-            $data['error'] = validation_errors();
+          $data['error'] = validation_errors();
         }
 
       }
@@ -195,22 +210,24 @@
       $data['expiryproduct'] = $this->notification->getExpiryProduct();
       $data['duedate'] = $this->notification->getDueDate();
       $data['oftproduct'] = $this->notification->getOftProduct();
-      $data['totalnoti'] = $this->notification->getTotalNoti();
+      $data['exnoti'] = $this->notification->getExNoti();
+      $data['ofsnoti'] = $this->notification->getOfsNoti();
+      $data['ornoti']  = $this->notification->getOrdernoti();
 
 
       $path='account/add_user';
       if(isset($_GET['ajax'])&&$_GET['ajax']==true)
       {
-          $this->load->view($path, $data);
+        $this->load->view($path, $data);
       }else{
-          $data['contents']=array($path);
-          $this->load->view('header', $data);
-          $this->load->view('index', $data);
-          $this->load->view('footer', $data);
+        $data['contents']=array($path);
+        $this->load->view('header', $data);
+        $this->load->view('index', $data);
+        $this->load->view('footer', $data);
       }
       
     }
-     
+    
     /**
      * account::edit_user()
      *
@@ -257,14 +274,14 @@
         {
           if(!$this->bitauth->is_admin())
           {
-              $this->form_validation->set_rules(array(
-            array( 'field' => 'old_password', 'label' => 'Old Password', 'rules' => 'required', ),
+            $this->form_validation->set_rules(array(
+              array( 'field' => 'old_password', 'label' => 'Old Password', 'rules' => 'required', ),
             ));
           }
           $this->form_validation->set_rules(array(
             array( 'field' => 'password', 'label' => 'Password', 'rules' => 'required|bitauth_valid_password', ),
             array( 'field' => 'password_conf', 'label' => 'Confirm Password', 'rules' => 'required|matches[password]', ),
-        ));
+          ));
         }
 
         if($this->form_validation->run() == TRUE)
@@ -273,9 +290,9 @@
           !isset($_POST['active']) ? $_POST['active']=0 :'';
           !isset($_POST['enabled']) ? $_POST['enabled']=0 :'';
           !isset($_POST['password_never_expires']) ? $_POST['password_never_expires']=0 :'';
-    
+          
           if(!$this->bitauth->is_admin()){
-              unset($_POST['active'],$_POST['enabled'],$_POST['password_never_expires'],$_POST['groups[]']);
+            unset($_POST['active'],$_POST['enabled'],$_POST['password_never_expires'],$_POST['groups[]']);
           }
           //upload picture
           if($_FILES['picture']['tmp_name'])
@@ -306,15 +323,15 @@
           $user['birth_date']=strtotime($user['birth_date']);
           if(!$this->bitauth->is_admin()&&isset($user['password'])&&strlen($user['password']))
           {
-              $tmp = $this->bitauth->get_user_by_id($user_id);
-              if(isset($user['old_password'])&&$this->bitauth->check_pass($user['old_password'],$tmp->password))
-              {
-                  unset($user['old_password']);
-                  $this->bitauth->update_user($user_id, $user);
-              }
-          }  else {
-              if(isset($user['old_password'])) unset($user['old_password']);
+            $tmp = $this->bitauth->get_user_by_id($user_id);
+            if(isset($user['old_password'])&&$this->bitauth->check_pass($user['old_password'],$tmp->password))
+            {
+              unset($user['old_password']);
               $this->bitauth->update_user($user_id, $user);
+            }
+          }  else {
+            if(isset($user['old_password'])) unset($user['old_password']);
+            $this->bitauth->update_user($user_id, $user);
           }
           
         }else{
@@ -333,17 +350,19 @@
       $data['expiryproduct'] = $this->notification->getExpiryProduct();
       $data['duedate'] = $this->notification->getDueDate();
       $data['oftproduct'] = $this->notification->getOftProduct();
-      $data['totalnoti'] = $this->notification->getTotalNoti();
+      $data['exnoti'] = $this->notification->getExNoti();
+      $data['ofsnoti'] = $this->notification->getOfsNoti();
+      $data['ornoti']  = $this->notification->getOrdernoti();
 
       $path='account/edit_user';
       if(isset($_GET['ajax'])&&$_GET['ajax']==true)
       {
-          $this->load->view($path, $data);
+        $this->load->view($path, $data);
       }else{
-          $data['contents']=array($path);
-          $this->load->view('header', $data);
-          $this->load->view('index', $data);
-          $this->load->view('footer', $data);
+        $data['contents']=array($path);
+        $this->load->view('header', $data);
+        $this->load->view('index', $data);
+        $this->load->view('footer', $data);
       }
     }
 
@@ -351,15 +370,15 @@
      * account::activate()
      *
      */
-     public function activate($activation_code)
-     {
+    public function activate($activation_code)
+    {
       if($this->bitauth->activate($activation_code))
       {
         echo "User successfully activated";
         return;
       }
       echo "Activation failed!";
-     }
+    }
 
     /**
      * account::deactivate()
@@ -386,8 +405,8 @@
      * account::logout()
      *
      */
-    public function logout()
-    {
+     public function logout()
+     {
       $this->bitauth->logout();
       redirect('home');
     }

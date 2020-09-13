@@ -39,9 +39,11 @@ class Customer_con extends CI_Controller
    $data['customer'] = $this->customer->get();
    $data['title']    = 'Customer List';
    $data['expiryproduct'] = $this->notification->getExpiryProduct();
-   $data['duedate'] = $this->notification->getDueDate();
-   $data['oftproduct'] = $this->notification->getOftProduct();
-   $data['totalnoti'] = $this->notification->getTotalNoti();
+                $data['oftproduct'] = $this->notification->getOftProduct();
+                $data['duedate'] = $this->notification->getDueDate();
+                $data['exnoti'] = $this->notification->getExNoti();
+                $data['ofsnoti'] = $this->notification->getOfsNoti();
+                $data['ornoti']  = $this->notification->getOrdernoti();
 
 
 
@@ -105,9 +107,11 @@ class Customer_con extends CI_Controller
 
     $data['title']='customer';
     $data['expiryproduct'] = $this->notification->getExpiryProduct();
-    $data['duedate'] = $this->notification->getDueDate();
-    $data['oftproduct'] = $this->notification->getOftProduct();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
+                $data['oftproduct'] = $this->notification->getOftProduct();
+                $data['duedate'] = $this->notification->getDueDate();
+                $data['exnoti'] = $this->notification->getExNoti();
+                $data['ofsnoti'] = $this->notification->getOfsNoti();
+                $data['ornoti']  = $this->notification->getOrdernoti();
 
     $path='customer/add';
     if(isset($_GET['ajax'])&&$_GET['ajax']==true)
@@ -175,10 +179,12 @@ class Customer_con extends CI_Controller
  
     $data['title'] = 'Edit customer';
     $data['customer']  = $this->customer;
-    $data['expiryproduct'] = $this->notification->getExpiryProduct();
-    $data['duedate'] = $this->notification->getDueDate();
-    $data['oftproduct'] = $this->notification->getOftProduct();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
+   $data['expiryproduct'] = $this->notification->getExpiryProduct();
+                $data['oftproduct'] = $this->notification->getOftProduct();
+                $data['duedate'] = $this->notification->getDueDate();
+                $data['exnoti'] = $this->notification->getExNoti();
+                $data['ofsnoti'] = $this->notification->getOfsNoti();
+                $data['ornoti']  = $this->notification->getOrdernoti();
 
     $path = 'customer/edit';
      if(isset($_GET['ajax'])&&$_GET['ajax']==true)

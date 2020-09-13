@@ -27,6 +27,7 @@ class Home_con extends CI_Model
 
 		$this->db->select('*');
 		$this->db->from('product');
+		$this->db->where('is_deleted','0');
 
 		$query = $this->db->get();
 

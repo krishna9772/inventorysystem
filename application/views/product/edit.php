@@ -38,40 +38,64 @@
                      <div class="form-group">
                     <div class="col-md-6">
                       <label>Manufacture Date</label>
-                     <input type="text" name='product_man_date' id='man_date' value="<?php echo set_value('product_man_date',$product->product_man_date);?>" class='form-control' placeholder='Manufacture Date' title='Manufacture Date'/> 
+                     <input type="date" name='product_man_date' id='' value="<?php echo set_value('product_man_date',$product->product_man_date);?>" class='form-control' placeholder='Manufacture Date' title='Manufacture Date'/> 
                     </div>
                     <div class="col-md-6">
                       <label>Expiry Date</label>
-                     <input type="text" name='product_ex_date' id='ex_date' value="<?php echo set_value('product_ex_date',$product->product_ex_date);?>" class='form-control' placeholder='Expire Date' title='Expire Date' required/> 
+                     <input type="date" name='product_ex_date' id='' value="<?php echo set_value('product_ex_date',$product->product_ex_date);?>" class='form-control' placeholder='Expire Date' title='Expire Date' required/> 
                     </div>
 
                    </div> 
                    <div class="form-group">
+
+
                      <div class="col-md-6">
-                       <input type="hidden" id='original_quantity'
+                       <input type="hidden" id='original_quantity' 
                         value="<?php echo set_value('quantity',$product->product_quantity);?>" class='form-control' placeholder='Quantity' title = 'Original Quantity' required>
-                      <input type="hidden" name="act_added_quantity" id='act_added_quantity'
-                       class='form-control input-sm' placeholder='Quantity' title = ' ActAdded Quantity' required>
-                    
+
+<!--                       <label>Actual Added Quantity</label>
+ -->                      <input type="hidden" name="act_added_quantity" id='act_added_quantity'
+                       class='form-control input-sm' placeholder='Quantity' title = ' ActAdded Quantity' required> 
+                     </div>
 
                     <div class="col-md-7">
-                      <input type="hidden" name="product_added_quantity" id='added_quantity'
+<!--                        <label>Added Quantity</label>
+ -->                      <input type="hidden" name="product_added_quantity" id='added_quantity'
                        class='form-control input-sm' placeholder='Quantity' title = 'Added Quantity' required>
-                        <input type="hidden" id='al_added_quantity'
+                        
+<!--                           <label>Already Added Quantity</label>
+ -->                        <input type="hidden" id='al_added_quantity'
                        class='form-control input-sm' value="<?php echo set_value('added_quantity',$product->product_added_quantity);?>" placeholder='Quantity' title = 'already Quantity' required>
+
                     </div>
-                      <label>Added Quantity</label>
-                       <input type="text" name="product_quantity" id='product_quantity'
-                        value="<?php echo set_value('product_quantity',$product->product_quantity);?>" class='form-control' placeholder='Quantity' title = 'Quantity' required>
-                        <label>Unit</label>
-                       <?php echo form_dropdown('product_unit',$unit_list,$product_unit,"id='selectize_id' class='form-control' placeholder='Select Unit' title='Unit' size=5 required");?>
-                     </div>
+
                      <div class="col-md-6">
+
                       <label>Remain Quantity</label>
                        <input type="text" name="product_remain_quantity" id='product_remain_quantity'
-                        value="<?php echo set_value('product_remain_quantity',$product->product_remain_quantity);?>" class='form-control' title="Remain Quantity" readonly >
+                        value="<?php echo set_value('product_remain_quantity',$product->product_remain_quantity);?>" class='form-control' style="width:70px;" title="Remain Quantity" readonly >
+
                         <input type="hidden" id="product_used_quantity">
+
                      </div>
+
+                    <div class="col-md-1">
+
+                        <label>Load/Unload</label>
+
+                        <input type="text" id='loadqty' class='form-control input-sm'  placeholder='Quantity' title = 'Quantity' style="width:70px;">
+
+                         <input type="hidden" name="product_quantity" id='product_quantity'
+                        value="<?php echo set_value('product_quantity',$product->product_quantity);?>" class='form-control input-sm'  placeholder='Quantity' title = 'Quantity' style="width:70px;"required readonly>
+
+                     </div>
+                       
+                      <div class="col-md-6">
+                        <label>Unit</label>
+
+                       <?php echo form_dropdown('product_unit',$unit_list,$product_unit,"id='selectize_id' class='form-control' placeholder='Select Unit' title='Unit' size=5 required");?>
+
+                      </div>
                    </div>
       </fieldset>
       <div class="clearfix"></div>
@@ -85,7 +109,7 @@
          <div class="col-md-6">
             <label>Selling Price</label>
              <input type="text" name="product_selling_price" id='product_selling_price' value="<?php echo set_value('product_selling_price',$product->product_selling_price);?>" class="form-control" placeholder='Selling Price' title = 'Selling Price' />
-             <input type="hidden" name="product_profit_price" id="product_profit_price" value="100">
+             <input type="hidden" name="product_profit_price" id="product_profit_price" value="<?php echo set_value('product_profit_price',$product->product_profit_price);?>">
          </div>
        </div>
        <div class="form-group">
@@ -151,37 +175,60 @@
 <script>
   $(document).ready(function(){
 
+       var product_used_quantity = parseInt($("#product_quantity").val()) - parseInt($("#product_remain_quantity").val());
 
-    var product_used_quantity = parseInt($("#product_quantity").val()) - parseInt($("#product_remain_quantity").val());
+       $("#product_used_quantity").val(product_used_quantity);
 
-    $("#product_used_quantity").val(product_used_quantity);
+       $("#added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()) + parseInt($("#al_added_quantity").val()));
 
-    $("#added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()) + parseInt($("#al_added_quantity").val()));
+       $("#act_added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()));
+
+    //    $("#loadqty").on('keyup',function(){
+
+    //    var quantity = $("#product_quantity").val();
+    //    var original_quantity = $("#original_quantity").val();
+       
+    //    var product_remain_quantity = parseInt($("#product_quantity").val())-parseInt($("#product_used_quantity").val());
+        
+    //     $("#product_remain_quantity").val(product_remain_quantity);
+
+    //     $("#added_quantity").val(parseInt($("#product_quantity").val()) - (parseInt($("#original_quantity").val()) + parseInt($("#al_added_quantity").val())));
+
+    //    $("#act_added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()));
+             
+    // });
+
+       $("#loadqty").on('keyup',function(){
+       
+      var quantity = parseInt($("#original_quantity").val());
+      var addedqty = parseInt($("#loadqty").val());
+      var usedqty  = parseInt($("#product_used_quantity").val());
+      var loadedqty =quantity+addedqty;
+      $("#product_quantity").val(parseInt(loadedqty)) ;
+      $("#product_remain_quantity").val(loadedqty-usedqty);
+
+      $("#added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()) + parseInt($("#al_added_quantity").val()));
+
+      $("#act_added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()));
+
+      if($("#loadqty").val().length == 0){
+
+     $("#product_quantity").val($("#original_quantity").val());
+     $("#product_remain_quantity").val($("#original_quantity").val()-$("#product_used_quantity").val());
+     $("#added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()) + parseInt($("#al_added_quantity").val()));
 
     $("#act_added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()));
+      }
 
-    $("#product_quantity").on('keyup',function(){
 
-       var quantity = $("#product_quantity").val();
-       var original_quantity = $("#original_quantity").val();
-       
-       var product_remain_quantity = parseInt($("#product_quantity").val())-parseInt($("#product_used_quantity").val());
-        
-         $("#product_remain_quantity").val(product_remain_quantity);
-
- $("#added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()) + parseInt($("#al_added_quantity").val()));
-
- $("#act_added_quantity").val(parseInt($("#product_quantity").val()) - parseInt($("#original_quantity").val()));
-
-             
     });
 
-     $(document).on('keyup','#product_base_price',function(){
-             var act_price = $("#product_base_price").val();
+     $(document).on('keyup','#product_base_price #product_selling_price',function(){
+      var act_price = $("#product_base_price").val();
       var sell_price = $("#product_selling_price").val();
       var pro_price = parseInt(sell_price) - parseInt(act_price);
-  var percentage = Math.round((parseInt(pro_price)/parseInt(act_price))*100);
-  var output = pro_price.toString().concat("(")+percentage.toString().concat("%)");
+      var percentage = Math.round((parseInt(pro_price)/parseInt(act_price))*100);
+      var output = pro_price.toString().concat("(")+percentage.toString().concat("%)");
         $("#product_profit_price").val(output);
 
         });
@@ -190,11 +237,13 @@
       var act_price = $("#product_base_price").val();
       var sell_price = $("#product_selling_price").val();
       var pro_price = parseInt(sell_price) - parseInt(act_price);
-  var percentage = Math.round((parseInt(pro_price)/parseInt(act_price))*100);
-  var output = pro_price.toString().concat("(")+percentage.toString().concat("%)");
+      var percentage = Math.round((parseInt(pro_price)/parseInt(act_price))*100);
+      var output = pro_price.toString().concat("(")+percentage.toString().concat("%)");
         $("#product_profit_price").val(output);
 
             });
+
+       //Category fetching code
 
        $(".category_id").change(function(){
 

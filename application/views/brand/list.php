@@ -18,7 +18,7 @@
 
        foreach($brand as $bran)
        {
-
+        $i = $i+1;
        	$actions = '';
        	if($this->bitauth->is_admin())
        	{
@@ -39,7 +39,7 @@
       
 
    	 echo '<tr id="brand'.$bran['brand_id'].'" title="'.$bran['brand_description'].'">'.
-          '<td>'.html_escape($bran['brand_id']).'</td>'.
+          '<td>'.$i.'</td>'.
           '<td>'.html_escape($bran['brand_name']).'</td>'.
           '<td>'.html_escape($bran['category_name']).'</td>'.
           '<td>'.$brand_status.'</td>'.
@@ -49,7 +49,6 @@
 
    
 }
-  $i++;
 
      echo '</tbody></table></div>';
 

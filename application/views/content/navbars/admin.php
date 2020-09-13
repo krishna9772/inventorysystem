@@ -7,6 +7,22 @@
         margin:3px 0;
     }
 
+ h3 {
+        display:block;
+        color:#333; 
+        background:#FFF;
+        font-weight:bold;
+        font-size:13px;    
+        padding:8px;
+        margin:0;
+        border-bottom:solid 1px rgba(100, 100, 100, .30);
+    }
+
+    p{
+
+        line-height: 2em;
+    }
+
       #noti_Container {
         position:relative;
         height: 100%;
@@ -14,7 +30,7 @@
     }
        
     /* A CIRCLE LIKE BUTTON IN THE TOP MENU. */
-    #noti_Button {
+    #noti_Button,#sec_noti_Button,#thi_noti_Button {
         width:22px;
         height:22px;
         line-height:25px;
@@ -26,13 +42,13 @@
         cursor:pointer;
     }
 
-    .glyphicon.glyphicon-bell{
+    .glyphicon.glyphicon-bell,.glyphicon.glyphicon-time{
 
         font-size: 20px;
     }
     
     /* THE POPULAR RED NOTIFICATIONS COUNTER. */
-    #noti_Counter {
+    #noti_Counter,#sec_noti_Counter,#thi_noti_Counter {
         display:block;
         position:absolute;
         background:#E1141E;
@@ -48,7 +64,7 @@
     }
         
     /* THE NOTIFICAIONS WINDOW. THIS REMAINS HIDDEN WHEN THE PAGE LOADS. */
-    #notifications {
+    #notifications,#sec_notifications,#thi_notifications {
         display:none;
         width:430px;
         position:absolute;
@@ -72,16 +88,28 @@
         margin-top:-20px;
         margin-left:10px;
     }
-        
-    h3 {
+
+    #sec_notifications:before {         
+        content: '';
         display:block;
-        color:#333; 
-        background:#FFF;
-        font-weight:bold;
-        font-size:13px;    
-        padding:8px;
-        margin:0;
-        border-bottom:solid 1px rgba(100, 100, 100, .30);
+        width:0;
+        height:0;
+        color:transparent;
+        border:10px solid #CCC;
+        border-color:transparent transparent #FFF;
+        margin-top:-20px;
+        margin-left:10px;
+    }
+    #thi_notifications:before {         
+        content: '';
+        display:block;
+        width:0;
+        height:0;
+        color:transparent;
+        border:10px solid #CCC;
+        border-color:transparent transparent #FFF;
+        margin-top:-20px;
+        margin-left:10px;
     }
         
     .seeAll {
@@ -108,12 +136,22 @@
     }
     .number-warning{
 
-         background: #FF0000;
-         border-radius: 3px;
-         padding: 3px;
-         color: #fff;
+         color: red;
     }
-    
+
+    a.notihr{
+
+      text-decoration: none;
+      color: #000;
+    }
+    a.notihr:hover{
+      background: black;
+    }
+
+    #order_id:hover {
+        cursor:pointer;
+    }
+
  </style>
    <li id="noti_Container">
                 <div id="noti_Counter"></div>   <!--SHOW NOTIFICATIONS COUNT.-->
@@ -123,14 +161,14 @@
 
                 <!--THE NOTIFICAIONS DROPDOWN BOX.-->
                 <div id="notifications">
-                    <h3>Notifications</h3>
+                    <h3>Expiring Products&nbsp;&nbsp;(<?php echo $exnoti;?>)</h3>
                     <div style="height:300px;padding: 5px;margin: auto;overflow-x:auto; overflow-y: auto;">
 
                        <?php 
 
-                       $date = date('m/d/Y');
+                       $date = date('Y-m-d');
 
-                      $inc_date = date('m/d/Y', strtotime("+20 day", strtotime($date))); 
+                      $inc_date = date('Y-m-d', strtotime("+20 day", strtotime($date))); 
 
                        foreach($expiryproduct as $row):
 
@@ -140,34 +178,46 @@
 
                          if($date >= $row['product_ex_date']){?>
 
-                            <p>Product    <span class="number"><?php echo $row['product_name']?></span> has  expired on <span class="number-warning"><?php echo $row['product_ex_date'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo base_url()?>product_con/update_product/<?php echo $row['product_id']."/".$row['category_id']."/".$row['brand_id']."/".$row['product_unit']?>"><span class="label label-warning pull-right">Edit</span></a></p>
+                           <a class="notihr" href="<?php echo base_url()?>product_con/update_product/<?php echo $row['product_id']."/".$row['category_id']."/".$row['brand_id']."/".$row['product_unit']?>"><p>Product    <span class="number"><?php echo $row['product_name']?></span> has  expired on <span class="number-warning"><?php echo $row['product_ex_date'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p></a>
                         <hr> 
-
 
                     <?php }else{ ?>
 
-                        <p>Product    <span class="number"><?php echo $row['product_name']?></span> is going to expire on <span class="number"><?php echo $row['product_ex_date'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo base_url()?>product_con/update_product/<?php echo $row['product_id']."/".$row['category_id']."/".$row['brand_id']."/".$row['product_unit']?>"><span class="label label-warning pull-right">Edit</span></a></p>
+                        <a class="notihr" href="<?php echo base_url()?>product_con/update_product/<?php echo $row['product_id']."/".$row['category_id']."/".$row['brand_id']."/".$row['product_unit']?>"><p>Product    <span class="number"><?php echo $row['product_name']?></span> is going to expire on <span class="number"><?php echo $row['product_ex_date'];?></span></p></a>
                         <hr> 
-
-
 
                     <?php } ?>
 
-
          <?php endforeach; ?>
+        
+                    </div>
+                    <div class="seeAll"><a href="#"></a></div>
+                </div>
+            </li>
+
+             <li id="noti_Container">
+                <div id="sec_noti_Counter"></div>   <!--SHOW NOTIFICATIONS COUNT.-->
+                
+                <!--A CIRCLE LIKE BUTTON TO DISPLAY NOTIFICATION DROPDOWN.-->
+                <div id="sec_noti_Button"><span class="glyphicon glyphicon-alert    
+" style="font-size: 15px; padding: 2px;"></span></div>    
+
+                <!--THE NOTIFICAIONS DROPDOWN BOX.-->
+                <div id="sec_notifications">
+                    <h3>Out of stock&nbsp;&nbsp;(<?php echo $ofsnoti;?>)</h3>
+                    <div style="height:300px;padding: 5px;margin: auto;overflow-x:auto; overflow-y: auto;">
+
 
             <?php foreach($oftproduct as $row): ?>
 
                 <?php if($row['product_remain_quantity'] <= 0) { ?>
 
-                     <p>Product  <span class="number"><?php echo $row['product_name']?></span> is out of stock <span class="number-warning"><?php echo $row['product_remain_quantity'];?></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <a href="<?php echo base_url()?>index.php/product_con/update_product/<?php echo $row['product_id']."/".$row['category_id']."/".$row['brand_id']."/".$row['product_unit']?>" id="edit"><span class="label label-warning pull-right">Edit</span></a></p>
+                      <a class="notihr" href="<?php echo base_url()?>index.php/product_con/update_product/<?php echo $row['product_id']."/".$row['category_id']."/".$row['brand_id']."/".$row['product_unit']?>"><p>Product  <span class="number"><?php echo $row['product_name']?></span> is out of stock <span class="number-warning"><?php echo $row['product_remain_quantity'];?></span></p></a>
 
             <hr>
                 <?php }else{?>
 
-         <p>Product  <span class="number"><?php echo $row['product_name']?></span> remains only  <span class="number"><?php echo $row['product_remain_quantity'];?></span> items in stock&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <a href="<?php echo base_url()?>index.php/product_con/update_product/<?php echo $row['product_id']."/".$row['category_id']."/".$row['brand_id']."/".$row['product_unit']?>" id="edit"><span class="label label-warning pull-right">Edit</span></a></p>
+         <a class="notihr" href="<?php echo base_url()?>index.php/product_con/update_product/<?php echo $row['product_id']."/".$row['category_id']."/".$row['brand_id']."/".$row['product_unit']?>"><p>Product  <span class="number"><?php echo $row['product_name']?></span> remains only  <span class="number"><?php echo $row['product_remain_quantity'];?></span> items in stock
         
                         <hr> 
             <?php } ?>
@@ -175,30 +225,50 @@
 
          <?php endforeach; ?>
 
-           <?php
+          
+                    </div>
+                    <div class="seeAll"><a href="#"></a></div>
+                </div>
+            </li>
 
-             $date1 = date('m-d-Y');
+
+             <li id="noti_Container">
+                <div id="thi_noti_Counter"></div>   <!--SHOW NOTIFICATIONS COUNT.-->
+                
+                <!--A CIRCLE LIKE BUTTON TO DISPLAY NOTIFICATION DROPDOWN.-->
+                <div id="thi_noti_Button"><span class="glyphicon glyphicon-time"></span></div>    
+
+                <!--THE NOTIFICAIONS DROPDOWN BOX.-->
+                <div id="thi_notifications">
+                    <h3>Duing Orders&nbsp;&nbsp;(<?php echo $ornoti;?>)</h3>
+                    <div style="height:300px;padding: 5px;margin: auto;overflow-x:auto; overflow-y: auto;">
+
+
+             <?php
+
+             $date = date('m-d-Y');
 
             foreach($duedate as $row):
 
              ?>
 
 
-          <?php if($date1 >= date('m-d-Y',$row['net_due_date'])){ ?>
+          <?php if($date >= date('m-d-Y',$row['net_due_date'])){ ?>
 
-              <p>Order Id <span class="number">#<?php echo $row['id']?></span> has dued on <span class="number-warning"><?php echo date('m/d/Y',$row['net_due_date']);?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo base_url()?>index.php/order_con/update_order/<?php echo $row['id']?>" id="edit"><span class="label label-warning pull-right">Edit</span></a></p>
+            <a class="notihr" href="<?php echo base_url()?>index.php/order_con/update_order/<?php echo $row['id']?>"><p>Order Id <span class="number"><?php echo $row['id']?></span> has dued on <span class="number-warning"><?php echo date('m/d/Y',$row['net_due_date']);?></span></p></a>
                         <hr> 
 
             <?php }else{ ?>
 
 
-         <p>Order Id <span class="number">#<?php echo $row['id']?></span> is going to due on <span class="number"><?php echo date('m/d/Y',$row['net_due_date']);?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo base_url()?>index.php/order_con/update_order/<?php echo $row['id']?>" id="edit"><span class="label label-warning pull-right">Edit</span></a></p>
+         <a class="notihr      </p></a>" href="<?php echo base_url()?>index.php/order_con/update_order/<?php echo $row['id']?>"><p>Order Id <span class="number"><?php echo $row['id']?></span> is going to due on <span class="number"><?php echo date('m/d/Y',$row['net_due_date']);?></span></p></a>
                         <hr> 
 
            <?php } ?> 
 
          <?php endforeach; ?>
 
+          
                     </div>
                     <div class="seeAll"><a href="#"></a></div>
                 </div>

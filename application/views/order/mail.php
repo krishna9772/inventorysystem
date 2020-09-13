@@ -10,7 +10,7 @@
         </div>
         <div class="modal-footer">
              <?php echo form_open('order_con/email_Order/'.$order->id);?>
-            <input type="text" name="email" class="form-control" placeholder="example@gmail.com"><br>
+            <input type="text" name="email" class="form-control" placeholder="example@gmail.com" required><br>
             <input type="submit" class="btn btn-primary" value="Send">
           <?php echo form_close();?>
           

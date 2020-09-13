@@ -19,7 +19,8 @@ echo  "<div class='table-responsive'><table id='cat_data' class='table table-bor
 
        foreach($category as $cat)
        {
-
+        
+        $i = $i+1;
        	$actions = '';
        	if($this->bitauth->is_admin())
        	{
@@ -37,7 +38,7 @@ echo  "<div class='table-responsive'><table id='cat_data' class='table table-bor
       }
 
    	 echo '<tr id="category'.$cat->category_id.'" title="'.$cat->category_description.'">'.
-          '<td>'.html_escape($cat->category_id).'</td>'.
+          '<td>'.$i.'</td>'.
           '<td>'.html_escape($cat->category_name).'</td>'.
           '<td>'.$category_status.'</td>'.
           '<td>'.html_escape(character_limiter($cat->category_description, 50,'...')).'</td>'.

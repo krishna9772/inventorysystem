@@ -77,6 +77,7 @@
                         //echo $v;
                       
                       ?>
+                      <a href="<?php echo base_url();?>index.php/monreports_con/getMultiReports/<?php echo $k;?>" class="pull-right"><i class="glyphicon glyphicon-stats"></i></a>
                       <a href="<?php echo base_url();?>monreports_con/Index/<?php echo $k;?>"><span  class="glyphicon glyphicon-calendar pull-right"></span></a>
                       </td>
                     </tr>

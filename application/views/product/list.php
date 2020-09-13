@@ -5,7 +5,7 @@
 if($product)
 {
 
-   $i=0;
+   $i=1;
 
 echo  "<div class='table-responsive'><table id='pro_data' class='table table-bordered table-striped' ><thead><tr>
            <th>ID</th>
@@ -50,7 +50,7 @@ echo  "<div class='table-responsive'><table id='pro_data' class='table table-bor
       }
 
      echo '<tr id="product'.$pro['product_id'].'" title="'.$pro['product_description'].'">'.
-          '<td>'.html_escape($pro['product_id']).'</td>'.
+          '<td>'.html_escape($i).'</td>'.
           '<td>'.html_escape($pro['product_name']).'</td>'.
           '<td>'.html_escape($pro['category_name']).'</td>'.
           '<td>'.html_escape($pro['brand_name']).'</td>'.
@@ -59,10 +59,11 @@ echo  "<div class='table-responsive'><table id='pro_data' class='table table-bor
           '<td>'.$product_status.'</td>'.
           '<td class="hidden-print">'.$actions.'</td>'.
         '</tr>';
-
+  
+    $i++;
    
 }
-  $i++;
+ 
 
      echo '</tbody></table></div>';
 

@@ -9,6 +9,8 @@
 
 require_once dirname(__FILE__)."/encoding_map.cls.php";
 
+use FontLib\Font;
+
 /**
  * Adobe Font Metrics file creation utility class.
  * 

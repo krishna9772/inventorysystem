@@ -29,7 +29,7 @@
               if(data=='ok'){
                   $('#brand<?php echo $brand->brand_id;?>').fadeOut(2000);
               }else if(data=='nok'){
-                  alert('brand.');
+                  alert('Already Used,Cannot Delete');
               }
               $('#modalConfirmDelete<?php echo $brand->brand_id;?>').modal('hide');
           });

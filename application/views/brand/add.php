@@ -17,17 +17,6 @@
             <div class="col-md-6">
            <input type="text" name='brand_name' id="brand_name" value="<?php echo $this->input->post('brand_name');?>" class='form-control' placeholder='Company Name' title='Company Name' required autofocus />
             </div>
-           </div>
-             <div class="form-group">
-                    <div class="col-sm-6">
-                      <select type="text" class="form-control" id="brand_status" name="brand_status" required>
-                        <option value="" disabled selected>--Select--</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                      </select>
-                    </div>
-                  </div>
-           <div class="form-group">
             <div class="col-md-6">
               <select name="category_id" id="selectize_id" class="form-control select-group" required>
                 <option value="">Select Principle Company</option>
@@ -39,7 +28,16 @@
              
               </select>
             </div>
-           </div>
+           </div><br><br><br>
+                  <div class="form-group">
+                    <div class="col-md-6">
+                      <select type="text" class="form-control" id="brand_status" name="brand_status" required>
+                        <option value="" disabled selected>--Select--</option>
+                        <option value="1" selected>Active</option>
+                        <option value="0">Inactive</option>
+                      </select>
+                    </div>
+                  </div>
           </fieldset>
           <fieldset>
            <legend>+ Description </legend>

@@ -659,12 +659,12 @@ class Bitauth
 		$this->set_error($this->lang->line('bitauth_activate_failed'));
 		return FALSE;
 	}
-
+	
 	  /**
    * Bitauth::deactivate()
    *
    * Activate a user
-   */	
+   */
   public function deactivate($user_id)
   {
     return $this->update_user($user_id, array('active' => 0, 'activation_code' => $this->generate_code()));

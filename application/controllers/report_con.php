@@ -65,10 +65,12 @@ class Report_con extends CI_Controller
 		}else{
 
 			$data['title'] = 'Report';
-    $data['expiryproduct'] = $this->notification->getExpiryProduct();
-    $data['duedate'] = $this->notification->getDueDate();
-    $data['oftproduct'] = $this->notification->getOftProduct();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
+            $data['expiryproduct'] = $this->notification->getExpiryProduct();
+            $data['oftproduct'] = $this->notification->getOftProduct();
+            $data['duedate'] = $this->notification->getDueDate();
+            $data['exnoti'] = $this->notification->getExNoti();
+            $data['ofsnoti'] = $this->notification->getOfsNoti();
+            $data['ornoti']  = $this->notification->getOrdernoti();
 
 			$data['contents'] = array($path);
 			$this->load->view('header',$data);

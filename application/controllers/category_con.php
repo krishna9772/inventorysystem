@@ -34,13 +34,14 @@ class Category_con extends CI_Controller
 
    $this->load->model('category');
    
-
-   $data['category'] = $this->category->get();
-   $data['title']    = 'Company List';
-   $data['expiryproduct'] = $this->notification->getExpiryProduct();
-   $data['duedate'] = $this->notification->getDueDate();
-   $data['oftproduct'] = $this->notification->getOftProduct();
-   $data['totalnoti'] = $this->notification->getTotalNoti();
+    $data['category'] = $this->category->get();
+    $data['title']    = 'Company List';
+    $data['expiryproduct'] = $this->notification->getExpiryProduct();
+    $data['oftproduct'] = $this->notification->getOftProduct();
+    $data['duedate'] = $this->notification->getDueDate();
+    $data['exnoti'] = $this->notification->getExNoti();
+    $data['ofsnoti'] = $this->notification->getOfsNoti();
+    $data['ornoti']  = $this->notification->getOrdernoti();
 
 
 
@@ -101,9 +102,11 @@ class Category_con extends CI_Controller
 
     $data['title']='Category';
     $data['expiryproduct'] = $this->notification->getExpiryProduct();
-    $data['duedate'] = $this->notification->getDueDate();
     $data['oftproduct'] = $this->notification->getOftProduct();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
+    $data['duedate'] = $this->notification->getDueDate();
+    $data['exnoti'] = $this->notification->getExNoti();
+    $data['ofsnoti'] = $this->notification->getOfsNoti();
+    $data['ornoti']  = $this->notification->getOrdernoti();
 
     $path='category/add';
     if(isset($_GET['ajax'])&&$_GET['ajax']==true)
@@ -136,6 +139,7 @@ class Category_con extends CI_Controller
 
     $this->load->model('category');
     $this->category->load($category_id);
+
 
     if($this->input->post())
     {
@@ -170,9 +174,11 @@ class Category_con extends CI_Controller
     $data['title'] = 'Edit Category';
     $data['category']  = $this->category;
     $data['expiryproduct'] = $this->notification->getExpiryProduct();
-    $data['duedate'] = $this->notification->getDueDate();
     $data['oftproduct'] = $this->notification->getOftProduct();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
+    $data['duedate'] = $this->notification->getDueDate();
+    $data['exnoti'] = $this->notification->getExNoti();
+    $data['ofsnoti'] = $this->notification->getOfsNoti();
+    $data['ornoti']  = $this->notification->getOrdernoti();
 
     $path = 'category/edit';
      if(isset($_GET['ajax'])&&$_GET['ajax']==true)
@@ -214,6 +220,10 @@ class Category_con extends CI_Controller
        if($this->form_validation->run() == TRUE && $this->input->post('category_id') == $category_id)
       {
 
+        $this->load->model('brand');
+        $this->brand->get_by_fkey('category_id',$category_id);
+
+        if(!$this->brand->category_id){
         $this->category->delete();
 
           echo 'ok';
@@ -222,6 +232,13 @@ class Category_con extends CI_Controller
         }else{
 
           echo 'nok';
+          return;
+
+        }
+
+        }else{
+
+          $data['error'] = 'mismatch';
           return;
 
         }

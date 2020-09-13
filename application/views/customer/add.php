@@ -36,7 +36,7 @@
                     <div class="col-sm-6">
                       <select type="text" class="form-control" id="customer_status" name="customer_status" required>
                         <option value="" disabled selected>--Select--</option>
-                        <option value="1">Active</option>
+                        <option value="1" selected>Active</option>
                         <option value="0">Inactive</option>
                       </select>
                        <input type="hidden" name="created_date" id="created_date" value="<?php echo date("Y/m/d")?>">

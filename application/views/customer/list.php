@@ -5,7 +5,7 @@
 if($customer)
 {
 
-   $i=0;
+   $i=1;
 
 echo  "<div class='table-responsive'><table id='cat_data' class='table table-bordered table-striped' ><thead><tr>
            <th>ID</th>
@@ -39,7 +39,7 @@ echo  "<div class='table-responsive'><table id='cat_data' class='table table-bor
       }
 
    	 echo '<tr id="customer'.$cus->customer_id.'" title="'.$cus->customer_description.'">'.
-          '<td>'.html_escape($cus->customer_id).'</td>'.
+          '<td>'.html_escape($i).'</td>'.
           '<td>'.html_escape($cus->customer_name).'</td>'.
           '<td>'.html_escape($cus->customer_address).'</td>'.
           '<td>'.html_escape($cus->customer_number).'</td>'.
@@ -48,9 +48,9 @@ echo  "<div class='table-responsive'><table id='cat_data' class='table table-bor
           '<td class="hidden-print">'.$actions.'</td>'.
         '</tr>';
 
-   
+   $i++;
 }
-  $i++;
+  
 
      echo '</tbody></table></div>';
 

@@ -54,7 +54,7 @@
             
           ?>                 
         </section>                 
-        <div id="fixedNavPadding" style="margin-bottom:72px" class="hidden"></div>                 
+        <div id="fixedNavPadding" style="margin-bottom:72px" class=""></div>                 
       </header>                 
       <div class="content">                 
 <?php /*

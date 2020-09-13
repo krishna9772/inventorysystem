@@ -21,8 +21,8 @@
             <div class="form-group">
                     <div class="col-sm-6">
                       <select type="text" class="form-control" id="category_status" name="category_status" required>
-                        <option value="" disabled selected>--Select--</option>
-                        <option value="1">Active</option>
+                        <option value="" disabled>--Select--</option>
+                        <option value="1" selected>Active</option>
                         <option value="0">Inactive</option>
                       </select>
                     </div>

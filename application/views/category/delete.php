@@ -29,7 +29,7 @@
               if(data=='ok'){
                   $('#category<?php echo $category->category_id;?>').fadeOut(2000);
               }else if(data=='nok'){
-                  alert('category');
+                   alert('Already Used ,Cannot Delete');
               }
               $('#modalConfirmDelete<?php echo $category->category_id;?>').modal('hide');
           });

@@ -11,7 +11,19 @@
                     <div class="col-md-6">
                       <input type="text" name="brand_name" id="brand_name" value="<?php echo set_value('brand_name', $brand->brand_name);?>" class='form-control' placeholder='brand' title='brand Name' required autofocus autocomplete />
                     </div>
+                      <div class="col-md-6">
+                       <select name="category_id" id="selectize_id" class="form-control select-group">
+                         <option value="<?php echo $brand->category_id;?>"><?php echo $category_name?></option>
+
+                            <?php foreach($category_list as $cat_name):?>
+     
+                         <option value="<?php echo $cat_name->category_id ?>"><?php echo $cat_name->category_name ?>
+                        </option>
+                           <?php endforeach; ?>
+
+                     </select>
                     </div>
+                   </div><br/><br/><br/>
 
 
                    <div class="form-group">
@@ -40,21 +52,6 @@
                       </select>
                     </div>
                   </div>
-
-              <div class="form-group">
-                 <div class="col-md-6">
-                   <select name="category_id" id="selectize_id" class="form-control select-group">
-                     <option value="<?php echo $brand->category_id;?>"><?php echo $category_name?></option>
-
-                     <?php foreach($category_list as $cat_name):?>
-     
-                <option value="<?php echo $cat_name->category_id ?>"><?php echo $cat_name->category_name ?>
-               </option>
-               <?php endforeach; ?>
-
-                </select>
-              </div>
-             </div>
                  </fieldset>
                    <fieldset>
              <legend>-Description</legend>

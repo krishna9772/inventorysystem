@@ -41,7 +41,7 @@ class Order extends MY_Model{
     public function create()
     {
 
-           $data = array(
+        $data = array(
             'bill_no' => $this->input->post('bill_no'),
             'customer_name' => $this->input->post('customer_name'),
             'customer_address' => $this->input->post('customer_address'),
@@ -150,19 +150,19 @@ class Order extends MY_Model{
             $this->db->delete('orders_item');
 
                  // now decrease the product qty
-     $count_product = count($this->input->post('product'));
-        for($x = 0; $x < $count_product; $x++) {
+            $count_product = count($this->input->post('product'));
+            for($x = 0; $x < $count_product; $x++) {
           
-            $items = array(
-                'order_id' => $id,
-               'product_id' => $this->input->post('product')[$x],
-                'qty' => $this->input->post('qty')[$x],
-                'rate' => $this->input->post('rate_value')[$x],
-                'tax'  => $this->input->post('tax')[$x],
-                'discount' => $this->input->post('discount')[$x],
-                'amount' => $this->input->post('amount_value')[$x],
-                'foc' => $this->input->post('foc')[$x],
-            );
+                 $items = array(
+                    'order_id' => $id,
+                   'product_id' => $this->input->post('product')[$x],
+                    'qty' => $this->input->post('qty')[$x],
+                    'rate' => $this->input->post('rate_value')[$x],
+                    'tax'  => $this->input->post('tax')[$x],
+                    'discount' => $this->input->post('discount')[$x],
+                    'amount' => $this->input->post('amount_value')[$x],
+                    'foc' => $this->input->post('foc')[$x],
+                );
             
             $this->db->insert('orders_item',$items); 
 
@@ -191,57 +191,71 @@ class Order extends MY_Model{
         return true;
 }
     
-    public function remove($id)
-    {
-        if($id) {
-            $this->db->where('id', $id);
-            $delete = $this->db->delete('orders');
+        public function remove($id)
+        {
+            if($id) {
+                $this->db->where('id', $id);
+                $delete = $this->db->delete('orders');
 
-            $this->db->where('order_id', $id);
-            $delete_item = $this->db->delete('orders_item');
-            return ($delete == true && $delete_item) ? true : false;
+                $this->db->where('order_id', $id);
+                $delete_item = $this->db->delete('orders_item');
+                return ($delete == true && $delete_item) ? true : false;
+            }
         }
-    }
 
-    public function countTotalPaidOrders()
-    {
-        $sql = "SELECT * FROM orders WHERE paid_status = ?";
-        $query = $this->db->query($sql, array(1));
-        return $query->num_rows();
-    }
-
-    public function fetchAllProduct($id)
-    {
-        $sql = "SELECT * FROM product where product_id = ? ";
-        $query = $this->db->query($sql,array($id));
-        return $query->row_array();
-    }
-
-
-    public function countOrderItem($order_id)
-    {
-        if($order_id) {
-            $sql = "SELECT * FROM orders_item WHERE order_id = ?";
-            $query = $this->db->query($sql, array($order_id));
+        public function countTotalPaidOrders()
+        {
+            $sql = "SELECT * FROM orders WHERE paid_status = ?";
+            $query = $this->db->query($sql, array(1));
             return $query->num_rows();
         }
-    }
 
-    public function fill_customer_list($customer_name=null)
-    {
-
-        if($customer_name){
-
-            $sql = "SELECT * FROM customer WHERE customer_status = 1 and customer_name = ?";
-            $query = $this->db->query($sql, array($customer_name));
-            return $query->result_array(); 
+        public function fetchAllProduct($id)
+        {
+            $sql = "SELECT * FROM product where product_id = ? ";
+            $query = $this->db->query($sql,array($id));
+            return $query->row_array();
         }
 
-         $query = $this->db->query("SELECT * FROM customer where customer_status = 1 ORDER BY customer_name ASC");
 
-         return $query->result();
- }
+        public function countOrderItem($order_id)
+        {
+            if($order_id) {
+                $sql = "SELECT * FROM orders_item WHERE order_id = ?";
+                $query = $this->db->query($sql, array($order_id));
+                return $query->num_rows();
+            }
+        }
+
+        public function fill_customer_list($customer_name=null)
+        {
+
+            if($customer_name){
+
+                $sql = "SELECT * FROM customer WHERE customer_status = 1 and customer_name = ?";
+                $query = $this->db->query($sql, array($customer_name));
+                return $query->result_array(); 
+            }
+
+             $query = $this->db->query("SELECT * FROM customer where customer_status = 1 ORDER BY customer_name ASC");
+
+             return $query->result();
+        }
 
 
+        public function change_status($order_id,$status)
+        {
+            $data = array('paid_status' => $status);
+            $this->db->where("id",$order_id);
+            $res = $this->db->update('orders', $data);
 
+            if($res == 1){
+
+                return true;
+
+            }else{
+
+                return false;
+            }
+        }
 }

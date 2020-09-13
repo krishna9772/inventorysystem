@@ -37,17 +37,16 @@ h1 {
   border: 0;
 }
 .form .btn {
-  width: 100%;
-  display: block;
-  padding: 14px 16px;
-  background: transparent;
-  outline: none;
-  border: 0;
-  color: #fff;
-  letter-spacing: 0.1em;
-  font-weight: bold;
-  font-family: monospace;
-  font-size: 16px;
+    width: 100%;
+    display: block;
+    padding: 2px 10px;
+    background: #31708f;
+    border: 0;
+    color: #fff;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 16px;
 }
 
 .block-cube {
@@ -157,9 +156,6 @@ h1 {
   <?php echo form_open('account/login',Array("id"=>"loginForm", "role"=>"form", "class"=>"form")); ?>
     <fieldset>
       <div class='control'>
-    <h1>
-      Sign In
-    </h1>
       </div>
       <?php echo ( ! empty($error) ? $error : '' ); ?>
      <div class='control block-cube block-input'>
@@ -183,6 +179,8 @@ h1 {
           echo form_password('password',null,"class='' placeholder='Password' title='Password'");
         ?>
 
+        
+
         <div class='bg-top'>
           <div class='bg-inner'></div>
          </div>
@@ -194,10 +192,13 @@ h1 {
         </div>
 
       </div>
-      
-      <div class="form-group">
-        <?php echo form_submit('login','Login','class="btn btn-primary"'); ?>
+      <div class="checkbox">
+      <?php echo form_label(form_checkbox('remember_me', 1,FALSE, 'id="remember_me"').' Remember Me', 'remember_me'); ?>
       </div>
-  </fieldset>
+      <div class="form-group">
+        <?php echo form_submit('login','Login','class="btn form-control"'); ?>
+      </div>
+      
+      </fieldset>
   <?php echo form_close(); ?>
 </div>

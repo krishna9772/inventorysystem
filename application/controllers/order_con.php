@@ -35,17 +35,13 @@ class Order_con extends CI_controller
     }
 
     $this->load->model('order');
-
     $data['title'] = 'Order List';
-
-    $data['order'] = $this->order->getOrdersData();
-
-    $data['expiryproduct']=$this->notification->getExpiryProduct();
+    $data['expiryproduct'] = $this->notification->getExpiryProduct();
     $data['oftproduct'] = $this->notification->getOftProduct();
     $data['duedate'] = $this->notification->getDueDate();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
-
-
+    $data['exnoti'] = $this->notification->getExNoti();
+    $data['ofsnoti'] = $this->notification->getOfsNoti();
+    $data['ornoti']  = $this->notification->getOrdernoti();
 
     $path = 'order/list';
 
@@ -65,6 +61,48 @@ class Order_con extends CI_controller
    
   }
 
+
+  public function fetch_Data()
+  {
+    $this->load->model('order');
+
+    $result = array('data' => array());
+
+    $data = $this->order->getOrdersData();
+
+     foreach ($data as $key=>$row){
+
+      $actions = '';
+
+         $actions .= anchor('order_con/update_Order/'.$row['id'], '<span class="glyphicon glyphicon-edit"></span>',array('title'=>'Edit order'));
+      //   $actions .= anchor('order_con/delete_Order/'.$row['id'], '<span class="glyphicon glyphicon-remove" class="delete"></span>',array('title'=>'Delete order'));
+        $actions .= anchor('order_con/print_Order/'.$row['id'], '<span class="glyphicon glyphicon-print" class="print"><span>',array('title'=>'Print order'));
+        $actions .= anchor('order_con/email_Order/'.$row['id'], '<span class="glyphicon glyphicon-paperclip" class="print"><span>',array('title'=>'Email order'));
+      
+      
+        if($row['paid_status'] == 1) {
+        $paid_status = '<span id="order_id" class="label label-success" data-number="'.$row['id'].'" data-status="'.$row['paid_status'].'">Paid</span>'; 
+        }
+        else {
+          $paid_status = '<span id="order_id" class="label label-warning" data-number="'.$row['id'].'" data-status="'.$row['paid_status'].'">Not Paid</span>';
+        }
+ 
+      $result['data'][$key] = array(
+        
+        $row['bill_no'],
+        $row['customer_name'],
+        $row['customer_address'],
+        date('Y-m-d', $row['date_time']),
+        date('Y-m-d', $row['date_time']),
+        number_format($row['net_amount'],2),
+        $paid_status,
+        $actions,
+     );
+
+    }
+
+      echo json_encode($result);
+  }
 
   /**
   *add_order
@@ -104,11 +142,12 @@ class Order_con extends CI_controller
     $data['product_list'] = $this->product->getActiveProductData();
     $data['customer_list'] = $this->order->fill_customer_list();
 
-    $data['expiryproduct']=$this->notification->getExpiryProduct();
+    $data['expiryproduct'] = $this->notification->getExpiryProduct();
     $data['oftproduct'] = $this->notification->getOftProduct();
     $data['duedate'] = $this->notification->getDueDate();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
-
+    $data['exnoti'] = $this->notification->getExNoti();
+    $data['ofsnoti'] = $this->notification->getOfsNoti();
+    $data['ornoti']  = $this->notification->getOrdernoti();
 
 
     $data['title'] = 'Order';
@@ -151,8 +190,8 @@ class Order_con extends CI_controller
         }
 
 
-    $data['title'] = 'Order';
-    $path = 'order/edit';
+        $data['title'] = 'Order';
+        $path = 'order/edit';
 
         $result = array();
         $orders_data = $this->order->getOrdersData($id);
@@ -171,27 +210,46 @@ class Order_con extends CI_controller
         $data['products'] = $this->product->getActiveProductData();
         $data['customer_list'] = $this->order->fill_customer_list();
 
-        $data['expiryproduct']=$this->notification->getExpiryProduct();
+        $data['expiryproduct'] = $this->notification->getExpiryProduct();
         $data['oftproduct'] = $this->notification->getOftProduct();
         $data['duedate'] = $this->notification->getDueDate();
-        $data['totalnoti'] = $this->notification->getTotalNoti();
+        $data['exnoti'] = $this->notification->getExNoti();
+        $data['ofsnoti'] = $this->notification->getOfsNoti();
+        $data['ornoti']  = $this->notification->getOrdernoti();
 
 
 
-
-     if(isset($_GET['ajax'])&&$_GET['ajax']==true)
-    {
-        $this->load->view($path, $data);
-    }
-    else
-    {
-        $data['contents']=array($path);
-        $this->load->view('header',$data);
-        $this->load->view('index',$data);
-        $this->load->view('footer',$data); 
-    }
+         if(isset($_GET['ajax'])&&$_GET['ajax']==true)
+        {
+            $this->load->view($path, $data);
+        }
+        else
+        {
+            $data['contents']=array($path);
+            $this->load->view('header',$data);
+            $this->load->view('index',$data);
+            $this->load->view('footer',$data); 
+        }
 
   }
+
+  public function change_order_status()
+  {   
+    $order_id = $this->input->post("order_id");
+    $status   =  $this->input->post("status");
+    $q = $this->order->change_status($order_id,$status);
+    $txtdomain='Unpaid';
+    if($status == 1){$txtdomain='Paid';}
+    
+    if($q==true){
+      
+      $json=['status'=>1,'message'=>'Changed'];
+    }else{
+      $json=['status'=>0,'message'=>'Unchanged'];
+    }
+
+    echo json_encode($json);
+  } 
   
   public function delete_Order($id=0)
   {
@@ -227,7 +285,7 @@ class Order_con extends CI_controller
           return;
 
 
-  }else{
+   }else{
 
         echo 'nok';
 
@@ -237,13 +295,10 @@ class Order_con extends CI_controller
   }
 
 }
-      
-
 
     $data['order'] = $this->order;
 
     $this->load->view('order/delete',$data);
-
 
   }
 
@@ -268,8 +323,8 @@ class Order_con extends CI_controller
       $html = '<!-- Main content -->
       <!DOCTYPE html>
       <html>
-      <head>
-        <meta charset="utf-8">
+      <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Invoice</title>
         <!-- Tell the browser to be responsive to screen width -->
@@ -282,18 +337,30 @@ class Order_con extends CI_controller
       
 
       <style>
+        body{
+
+           padding:22px;
+        }
+        
         th{
 
           padding-right:26px;       
+          font-size:10px;  
         }
+        
+        td{
+
+           font-size:11px;
+        }
+        
         .data-div{
                   
-            height:600px;
+            height:340px;
         }
 
         b{
 
-           padding-right:50px;
+           padding-right:20px;
         }
         p{
            margin: 0 38px 13px;
@@ -327,7 +394,7 @@ class Order_con extends CI_controller
               
               <b>Ma Tue Tue(1)<br>
               <b>No.146, Myo Ma Quarters, Mogoke City<br>
-              <b>Tel:08620473<br />
+              <b>Tel:08620473
             </div>
             <!-- /.col -->
           </div><br><br>
@@ -414,7 +481,7 @@ class Order_con extends CI_controller
               <b>Total Items:</b>'.$num_orders_items.'
            </div>
            <div class="pull-right">
-            <p class="sub-amount"><b>Sale Amount (Including Commercial Tax):</b>'.$order_data['net_amount'].'</p>
+Sale Amount (Including Commercial Tax):  <b>'.$order_data['net_amount'].'</b>
            </div>
           </div><br>
           <div class="row">
@@ -437,7 +504,7 @@ class Order_con extends CI_controller
           </div>
         </section>
         <!-- /.content -->
-      </div>
+      </div><br><br><br>
 
         <div class="container">
         <section class="invoice">
@@ -545,7 +612,7 @@ class Order_con extends CI_controller
               <b>Total Items:</b>'.$num_orders_items.'
            </div>
            <div class="pull-right">
-            <p class="sub-amount"><b>Sale Amount (Including Commercial Tax):</b>'.$order_data['net_amount'].'</p>
+ Sale Amount (Including Commercial Tax):  <b>'.$order_data['net_amount'].'</b>
            </div>
           </div><br>
           <div class="row">
@@ -597,7 +664,7 @@ class Order_con extends CI_controller
       $html = '<!DOCTYPE html>
       <html>
       <head>
-        <meta charset="utf-8">
+        
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Invoice</title>
         <!-- Tell the browser to be responsive to screen width -->
@@ -773,24 +840,26 @@ class Order_con extends CI_controller
     $this->pdf->loadHtml($this->invoice($id), 'UTF-8');
     
     $this->pdf->render();
-    
+
     $output = $this->pdf->output();
     $file_name = md5(rand()) . '.pdf';
     file_put_contents($file_name,$output);
     
     $order_data = $this->order->getOrdersData($id);
     
-    $data['expiryproduct']=$this->notification->getExpiryProduct();
+    $data['expiryproduct'] = $this->notification->getExpiryProduct();
     $data['oftproduct'] = $this->notification->getOftProduct();
     $data['duedate'] = $this->notification->getDueDate();
-    $data['totalnoti'] = $this->notification->getTotalNoti();
-    // Email configuration
+    $data['exnoti'] = $this->notification->getExNoti();
+    $data['ofsnoti'] = $this->notification->getOfsNoti();
+    $data['ornoti']  = $this->notification->getOrdernoti();
+   //Email configuration
         $config = Array(
             'protocol' => 'sendmail',
             'smtp_host' => 'localhost',
             'smtp_port' => 465,
-            'smtp_user' => 'aryalkrishna642@gmail.com', // change it to yours
-            'smtp_pass' => 'sunainar12345', // change it to yours
+            'smtp_user' => 'matuetue.mgk@gmail.com', // change it to yours
+            'smtp_pass' => '123456mtt', // change it to yours
             'mailtype' => 'html',
             'starttls'  => true,
             'charset' => 'iso-8859-1',
@@ -798,7 +867,7 @@ class Order_con extends CI_controller
         );
         
         $this->load->library('email', $config);
-        $this->email->from('aryalkrishna642@gmail.com', "matutu1.hypms.com");
+        $this->email->from('matuetue.mgk@gmail.com', "matutu1.hypms.com");
         $this->email->to($email);
         $this->email->subject("Invoice");
         $this->email->message("Hello ".$order_data['customer_name']." this is your invoice receipt send from Ma Tue Tue");
@@ -811,7 +880,7 @@ class Order_con extends CI_controller
         }else{
 
             $this->session->set_flashdata('errors', 'Error occurred!!');
-            // redirect('order_con/fetch_Order/', 'refresh');
+            redirect('order_con/fetch_Order/', 'refresh');
 
             echo $this->email->print_debugger();
 

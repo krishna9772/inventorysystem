@@ -29,7 +29,7 @@
               if(data =='ok'){   
                   $('#product<?php echo $product->product_id;?>').fadeOut(2000);
               }else if(data =='nok'){
-                  alert('product');
+                alert('Product Already Used,Cannot Delete');
               }
               $('#modalConfirmDelete<?php echo $product->product_id;?>').modal('hide');
           });
